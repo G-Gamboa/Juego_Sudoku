@@ -17,14 +17,44 @@ class GENERAR_SUDOKU():
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]]
         
-#Aún se encuentra en proceso está función, no está completa al 100
+#Funciona por el momento, aunque sería bueno buscar alguna mejor manera, pero cumple con el propósito de
+#Generar Sudokus aleatorios
 
     def datos_random(self):
-        for x in range(28):
+        numeros=[1,2,3,4,5,6,7,8,9]
+        for x in range(9):
             random_fila=random.randrange(9)
             random_columna=random.randrange(9)
-            self.comprobacion(x,random_fila,random_columna)
-            self.base[random_fila][random_columna]=random.randrange(9)
+
+            aleatorio=random.choice(numeros)
+
+            if self.comprobacion(aleatorio,x,random_columna):
+                if self.comprobacion(aleatorio,random_fila,x):
+                    self.base[x][random_columna]=aleatorio
+
+            if self.comprobacion(aleatorio,random_fila,x):
+                if self.comprobacion(aleatorio,x,random_columna):
+                    self.base[random_fila][x]=aleatorio
+
+            numeros.remove(aleatorio)
+        
+        numeros=[1,2,3,4,5,6,7,8,9]
+        for x in range(9):
+            random_fila=random.randrange(9)
+            random_columna=random.randrange(9)
+
+            aleatorio=random.choice(numeros)
+
+            if self.comprobacion(aleatorio,x,random_columna):
+                if self.comprobacion(aleatorio,random_fila,x):
+                    self.base[x][random_columna]=aleatorio
+
+            if self.comprobacion(aleatorio,random_fila,x):
+                if self.comprobacion(aleatorio,x,random_columna):
+                    self.base[random_fila][x]=aleatorio
+
+            numeros.remove(aleatorio)
+
 
     def  impresion_sudoku (self): 
         for  i  in  self.base : 
@@ -67,7 +97,6 @@ class GENERAR_SUDOKU():
                     return  False 
         return  True
 
-
     def  solucion_sudoku (self): 
         fil  =  0 
         col  =  0 
@@ -98,4 +127,4 @@ print("---------------------SOLUCIÓN---------------------------------")
 if  solucion.solucion_sudoku (): 
     solucion.impresion_sudoku () 
 else : 
-    print ( "Sin solución" )
+    print("Sin solución")
