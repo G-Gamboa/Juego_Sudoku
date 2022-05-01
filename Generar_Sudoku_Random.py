@@ -1,16 +1,6 @@
-#Documento que servirá para subir las pruebas realizadas
-#base=[ 
- #           [ 6 , 5 , 0 , 8 , 7 , 3 , 0 , 9 , 0 ], 
-  #          [ 0 , 0 , 3 , 2 , 5 , 0 , 0 , 0 , 8 ], 
-   #         [ 9 , 8 , 0 , 1 , 0 ,4 , 3 , 5 , 7 ], 
-    #        [ 1 , 0 , 5 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-     #       [ 4 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 2 ], 
-      #      [ 0 , 0 , 0 , 0 , 0 , 0 , 5 ,0 , 3 ], 
-       #     [ 5 , 7 , 8 , 3 , 0 , 1 , 0 , 2 , 6 ], 
-        #    [ 2 , 0 , 0 , 0 , 4 , 8 , 9 , 0 , 0 ], 
-         #   [ 0 , 9 , 0 , 6 , 2 , 5 , 0 , 8 , 1 ]]
+import random
 
-class RESOLVER_SUDOKU():
+class GENERAR_SUDOKU():
     def __init__(self):
         pass
 
@@ -27,21 +17,14 @@ class RESOLVER_SUDOKU():
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
             [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]]
         
-    def ingresar_sudoku(self):
-        print("             -----Ingresa los valores del sudoku que deseas resolver-----")
-        print("                 -----Debes ingresarlos fila por fila-----")
-        print("         -----Debes ingresarlos incluyendo ceros en los espacios vacíos-----")
-        print("                 -----Cada valor debe estar separado por una coma -----")
+#Aún se encuentra en proceso está función, no está completa al 100
 
-        for x in range(9):
-            datos=input("Ingresa los datos de la fila "+str(x+1)+": ")
-            filas=datos.split(",")
-            cambio_filas=[]
-            for a in range(9):
-                y=filas[a]
-                cambio=int(y)
-                cambio_filas.append(cambio)
-            self.base.append(cambio_filas)
+    def datos_random(self):
+        for x in range(28):
+            random_fila=random.randrange(9)
+            random_columna=random.randrange(9)
+            self.comprobacion(x,random_fila,random_columna)
+            self.base[random_fila][random_columna]=random.randrange(9)
 
     def  impresion_sudoku (self): 
         for  i  in  self.base : 
@@ -107,9 +90,10 @@ class RESOLVER_SUDOKU():
 
 #-----------------------------PARTE CENTRAL---------------------------
 
-solucion=RESOLVER_SUDOKU()
+solucion=GENERAR_SUDOKU()
 solucion.crear()
-#solucion.ingresar_sudoku()
+solucion.datos_random()
+solucion.impresion_sudoku()
 print("---------------------SOLUCIÓN---------------------------------")
 if  solucion.solucion_sudoku (): 
     solucion.impresion_sudoku () 
