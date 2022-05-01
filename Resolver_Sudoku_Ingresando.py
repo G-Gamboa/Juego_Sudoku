@@ -5,15 +5,7 @@ class RESOLVER_SUDOKU():
     def crear(self):
         self.TAMAÑO=9
         self.base=[ 
-            [ 6 , 5 , 0 , 8 , 7 , 3 , 0 , 9 , 0 ], 
-            [ 0 , 0 , 3 , 2 , 5 , 0 , 0 , 0 , 8 ], 
-            [ 9 , 8 , 0 , 1 , 0 ,4 , 3 , 5 , 7 ], 
-            [ 1 , 0 , 5 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 4 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 2 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 5 ,0 , 3 ], 
-            [ 5 , 7 , 8 , 3 , 0 , 1 , 0 , 2 , 6 ], 
-            [ 2 , 0 , 0 , 0 , 4 , 8 , 9 , 0 , 0 ], 
-            [ 0 , 9 , 0 , 6 , 2 , 5 , 0 , 8 , 1 ]]
+            ]
         
     def ingresar_sudoku(self):
         print("             -----Ingresa los valores del sudoku que deseas resolver-----")
@@ -22,7 +14,7 @@ class RESOLVER_SUDOKU():
         print("                 -----Cada valor debe estar separado por una coma -----")
 
         for x in range(9):
-            datos=input("Ingresa los datos de la fila"+str(x+1)+": ")
+            datos=input("Ingresa los datos de la fila "+str(x+1)+": ")
             filas=datos.split(",")
             cambio_filas=[]
             for a in range(9):
@@ -64,6 +56,7 @@ class RESOLVER_SUDOKU():
                 return  False 
 
         sub_fila  =  ( f // 3 ) * 3 
+        sub_fila  =  ( f // 3 ) * 3 
         sub_columna  =  ( c// 3 ) * 3 ; 
         #Comprueba que los valores no se repitan en los espacios 3x3
         for  i  in range ( sub_fila , sub_fila + 3 ): 
@@ -95,11 +88,11 @@ class RESOLVER_SUDOKU():
 
 #-----------------------------PARTE CENTRAL---------------------------
 
-pruebas=RESOLVER_SUDOKU()
-pruebas.crear()
-#pruebas.ingresar_sudoku()
+solucion=RESOLVER_SUDOKU()
+solucion.crear()
+solucion.ingresar_sudoku()
 print("---------------------SOLUCIÓN---------------------------------")
-if  pruebas.solucion_sudoku (): 
-    pruebas.impresion_sudoku () 
+if  solucion.solucion_sudoku (): 
+    solucion.impresion_sudoku () 
 else : 
     print ( "Sin solución" )
