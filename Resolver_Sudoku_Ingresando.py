@@ -56,7 +56,6 @@ class RESOLVER_SUDOKU():
                 return  False 
 
         sub_fila  =  ( f // 3 ) * 3 
-        sub_fila  =  ( f // 3 ) * 3 
         sub_columna  =  ( c// 3 ) * 3 ; 
         #Comprueba que los valores no se repitan en los espacios 3x3
         for  i  in range ( sub_fila , sub_fila + 3 ): 

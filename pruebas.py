@@ -1,7 +1,11 @@
 #Documento que servirá para subir las pruebas realizadas
-import logica_Sudoku
-
-a=logica_Sudoku.LOG_SUDOKU()
-
-a.crear()
-a.impresion_sudoku()
+base=[ 
+            [ 6 , 5 , 0 , 8 , 7 , 3 , 0 , 9 , 0 ], 
+            [ 0 , 0 , 3 , 2 , 5 , 0 , 0 , 0 , 8 ], 
+            [ 9 , 8 , 0 , 1 , 0 ,4 , 3 , 5 , 7 ], 
+            [ 1 , 0 , 5 , 0 , 0 , 0 , 0 , 0 , 0 ], 
+            [ 4 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 2 ], 
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 5 ,0 , 3 ], 
+            [ 5 , 7 , 8 , 3 , 0 , 1 , 0 , 2 , 6 ], 
+            [ 2 , 0 , 0 , 0 , 4 , 8 , 9 , 0 , 0 ], 
+            [ 0 , 9 , 0 , 6 , 2 , 5 , 0 , 8 , 1 ]]
