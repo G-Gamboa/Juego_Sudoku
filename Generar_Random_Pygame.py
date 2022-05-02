@@ -1,9 +1,6 @@
-#GENERA UN SUDOKU ALEATORIO Y LO IMPRIME DESDE LA TERMINAL 
-
-
 import random
 
-class GENERAR_SUDOKU():
+class GENERAR_SUDOKU_PYGAME():
     def __init__(self):
         pass
 
@@ -57,11 +54,6 @@ class GENERAR_SUDOKU():
                     self.base[random_fila][x]=aleatorio
 
             numeros.remove(aleatorio)
-
-
-    def  impresion_sudoku (self): 
-        for  i  in  self.base : 
-            print  ( i )
 
     def  asignacion (self, fila , columna ): 
         asignacion_numeros  =  0 
@@ -122,12 +114,8 @@ class GENERAR_SUDOKU():
 
 #-----------------------------PARTE CENTRAL---------------------------
 
-solucion=GENERAR_SUDOKU()
+solucion=GENERAR_SUDOKU_PYGAME()
 solucion.crear()
 solucion.datos_random()
-solucion.impresion_sudoku()
 print("---------------------SOLUCIÓN---------------------------------")
-if  solucion.solucion_sudoku (): 
-    solucion.impresion_sudoku () 
-else : 
-    print("Sin solución")
+solucion.solucion_sudoku ()

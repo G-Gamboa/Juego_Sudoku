@@ -1,3 +1,6 @@
+# RESUELVE UN SUDOKU INGRESADO POR EL USUARIO DESDE LA TERMINAL 
+
+
 class RESOLVER_SUDOKU():
     def __init__(self):
         pass

@@ -1,63 +1,27 @@
-#GENERA UN SUDOKU ALEATORIO Y LO IMPRIME DESDE LA TERMINAL 
-
-
-import random
-
-class GENERAR_SUDOKU():
+class RESOLVER_SUDOKU():
     def __init__(self):
         pass
 
     def crear(self):
         self.TAMAÑO=9
         self.base=[ 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]]
+            ]
         
-#Funciona por el momento, aunque sería bueno buscar alguna mejor manera, pero cumple con el propósito de
-#Generar Sudokus aleatorios
+    def ingresar_sudoku(self):
+        print("             -----Ingresa los valores del sudoku que deseas resolver-----")
+        print("                 -----Debes ingresarlos fila por fila-----")
+        print("         -----Debes ingresarlos incluyendo ceros en los espacios vacíos-----")
+        print("                 -----Cada valor debe estar separado por una coma -----")
 
-    def datos_random(self):
-        numeros=[1,2,3,4,5,6,7,8,9]
         for x in range(9):
-            random_fila=random.randrange(9)
-            random_columna=random.randrange(9)
-
-            aleatorio=random.choice(numeros)
-
-            if self.comprobacion(aleatorio,x,random_columna):
-                if self.comprobacion(aleatorio,random_fila,x):
-                    self.base[x][random_columna]=aleatorio
-
-            if self.comprobacion(aleatorio,random_fila,x):
-                if self.comprobacion(aleatorio,x,random_columna):
-                    self.base[random_fila][x]=aleatorio
-
-            numeros.remove(aleatorio)
-        
-        numeros=[1,2,3,4,5,6,7,8,9]
-        for x in range(9):
-            random_fila=random.randrange(9)
-            random_columna=random.randrange(9)
-
-            aleatorio=random.choice(numeros)
-
-            if self.comprobacion(aleatorio,x,random_columna):
-                if self.comprobacion(aleatorio,random_fila,x):
-                    self.base[x][random_columna]=aleatorio
-
-            if self.comprobacion(aleatorio,random_fila,x):
-                if self.comprobacion(aleatorio,x,random_columna):
-                    self.base[random_fila][x]=aleatorio
-
-            numeros.remove(aleatorio)
-
+            datos=input("Ingresa los datos de la fila "+str(x+1)+": ")
+            filas=datos.split(",")
+            cambio_filas=[]
+            for a in range(9):
+                y=filas[a]
+                cambio=int(y)
+                cambio_filas.append(cambio)
+            self.base.append(cambio_filas)
 
     def  impresion_sudoku (self): 
         for  i  in  self.base : 
@@ -100,6 +64,7 @@ class GENERAR_SUDOKU():
                     return  False 
         return  True
 
+
     def  solucion_sudoku (self): 
         fil  =  0 
         col  =  0 
@@ -122,12 +87,11 @@ class GENERAR_SUDOKU():
 
 #-----------------------------PARTE CENTRAL---------------------------
 
-solucion=GENERAR_SUDOKU()
+solucion=RESOLVER_SUDOKU()
 solucion.crear()
-solucion.datos_random()
-solucion.impresion_sudoku()
+solucion.ingresar_sudoku()
 print("---------------------SOLUCIÓN---------------------------------")
 if  solucion.solucion_sudoku (): 
     solucion.impresion_sudoku () 
 else : 
-    print("Sin solución")
+    print ( "Sin solución" )
