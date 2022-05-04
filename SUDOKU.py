@@ -13,22 +13,24 @@ class DISEÑO():
         self.celeste=(92,222,220)
         self.tamaño_pantalla=(550,650)
         self.fuente_numeros=pygame.font.SysFont("Cooper",40)
-        self.fuentes_textos=pygame.font.SysFont("Arial",60)
+        self.fuente_textos=pygame.font.SysFont("Arial",60)
         self.tamaño=9
+        self.separacion=(self.tamaño_pantalla[0]-40)/9
         self.x=0
         self.y=0
         self.valores=0
         self.espacios=self.tamaño_pantalla[0]/self.tamaño
+        #CONTIENE NÚMEROS SOLAMENTE PARA PRUEBAS, AL TERMINAR EL PROGRAMA DEBE ESTABLECERSE VACÍA
         self.base=[ 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ], 
-            [ 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]]
+            [ 6 , 5 , 0 , 8 , 7 , 3 , 0 , 9 , 0 ], 
+            [ 0 , 0 , 3 , 2 , 5 , 0 , 0 , 0 , 8 ], 
+            [ 9 , 8 , 0 , 1 , 0 ,4 , 3 , 5 , 7 ], 
+            [ 1 , 0 , 5 , 0 , 0 , 0 , 0 , 0 , 0 ], 
+            [ 4 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 2 ], 
+            [ 0 , 0 , 0 , 0 , 0 , 0 , 5 ,0 , 3 ], 
+            [ 5 , 7 , 8 , 3 , 0 , 1 , 0 , 2 , 6 ], 
+            [ 2 , 0 , 0 , 0 , 4 , 8 , 9 , 0 , 0 ], 
+            [ 0 , 9 , 0 , 6 , 2 , 5 , 0 , 8 , 1 ]]
 
     def coordenadas(self,pos):
         global x
@@ -44,16 +46,10 @@ class DISEÑO():
         
     def casillas(self):
         for i in range(2):
-            
-            limites=self.tamaño_pantalla[0]-40
-            separacion=(limites)/9
-        
-            pygame.draw.line(self.pantalla, self.rojo, (self.x * separacion+20-3, (self.y + i)*separacion+20), (self.x * separacion+20+ separacion + 3, (self.y + i)*separacion+20), 7)
-            pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* separacion+20, self.y * separacion+20), ((self.x + i) * separacion+20	, self.y * separacion+20 + separacion), 7)
+            pygame.draw.line(self.pantalla, self.rojo, (self.x * self.separacion+20-3, (self.y + i)*self.separacion+20), (self.x * self.separacion+20+ self.separacion + 3, (self.y + i)*self.separacion+20), 7)
+            pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* self.separacion+20, self.y * self.separacion+20), ((self.x + i) * self.separacion+20	, self.y * self.separacion+20 + self.separacion), 7)
     def marco(self):
-        grosor=8
         limites=self.tamaño_pantalla[0]-40
-        separacion=(limites)/9
 
         for i in range(10):
             if i % 3 == 0 :
@@ -62,9 +58,8 @@ class DISEÑO():
                 grosor = 2
 
             #FALTA HACER QUE EL CUADRO QUEDE EXACTO EN AMBOS BORDES
-            pygame.draw.line(self.pantalla, self.negro, (20, i * separacion+20), (limites+20, i * separacion+20), grosor)
-            pygame.draw.line(self.pantalla, self.negro, (i * separacion+20, 20), (i * separacion+20, limites+20), grosor)	
-
+            pygame.draw.line(self.pantalla, self.negro, (20, i * self.separacion+20), (limites+20, i * self.separacion+20), grosor)
+            pygame.draw.line(self.pantalla, self.negro, (i * self.separacion+20, 20), (i * self.separacion+20, limites+20), grosor)	
 
 class GENERAR_SUDOKU_PYGAME(DISEÑO):
     def __init__(self):
@@ -173,6 +168,18 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
                     return  True 
                 self.base [ fil ] [ col ] = 0
         return  False
+    
+    def valores_en_pantalla(self):
+        for i in range (9):
+            for j in range (9):
+                if self.base[j][i]!= 0:
+
+                    # Fill blue color in already numbered grid
+                    pygame.draw.rect(self.pantalla, (self.celeste),(i * self.separacion+20, j * self.separacion+20, self.separacion+3, self.separacion+3))
+
+                    # Fill grid with default numbers specified
+                    numeros = self.fuente_numeros.render(str(self.base[j][i]), 1,self.negro)
+                    self.pantalla.blit(numeros, (i * self.separacion + 42, j * self.separacion + 37))
 
 class JUEGO(GENERAR_SUDOKU_PYGAME):
     def Juego_Sudoku(self):
@@ -189,6 +196,7 @@ class JUEGO(GENERAR_SUDOKU_PYGAME):
                     pos=pygame.mouse.get_pos()
                     self.coordenadas(pos)
             
+            self.valores_en_pantalla()
             self.marco()
             if seleccion1 == 1:
                 self.casillas()
