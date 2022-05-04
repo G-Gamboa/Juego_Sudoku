@@ -18,6 +18,8 @@ class DISEÑO():
         self.separacion=(self.tamaño_pantalla[0]-40)/9
         self.x=0
         self.y=0
+        self.inicio=True
+        self.seleccion1=0
         self.valores=0
         self.espacios=self.tamaño_pantalla[0]/self.tamaño
         #CONTIENE NÚMEROS SOLAMENTE PARA PRUEBAS, AL TERMINAR EL PROGRAMA DEBE ESTABLECERSE VACÍA
@@ -45,21 +47,22 @@ class DISEÑO():
         pygame.display.set_caption("JUEGO SUDOKU")
         
     def casillas(self):
-        for i in range(2):
-            pygame.draw.line(self.pantalla, self.rojo, (self.x * self.separacion+20-3, (self.y + i)*self.separacion+20), (self.x * self.separacion+20+ self.separacion + 3, (self.y + i)*self.separacion+20), 7)
-            pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* self.separacion+20, self.y * self.separacion+20), ((self.x + i) * self.separacion+20	, self.y * self.separacion+20 + self.separacion), 7)
+        if self.y<9:
+            for i in range(2):
+                pygame.draw.line(self.pantalla, self.rojo, (self.x * self.separacion+20-3, (self.y + i)*self.separacion+20), (self.x * self.separacion+20+ self.separacion + 3, (self.y + i)*self.separacion+20), 7)
+                pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* self.separacion+20, self.y * self.separacion+20), ((self.x + i) * self.separacion+20	, self.y * self.separacion+20 + self.separacion), 7)
+ 
     def marco(self):
         limites=self.tamaño_pantalla[0]-40
-
         for i in range(10):
             if i % 3 == 0 :
                 grosor = 8
             else:
                 grosor = 2
 
-            #FALTA HACER QUE EL CUADRO QUEDE EXACTO EN AMBOS BORDES
             pygame.draw.line(self.pantalla, self.negro, (20, i * self.separacion+20), (limites+20, i * self.separacion+20), grosor)
             pygame.draw.line(self.pantalla, self.negro, (i * self.separacion+20, 20), (i * self.separacion+20, limites+20), grosor)	
+ 
 
 class GENERAR_SUDOKU_PYGAME(DISEÑO):
     def __init__(self):
@@ -173,38 +176,111 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
         for i in range (9):
             for j in range (9):
                 if self.base[j][i]!= 0:
-
-                    # Fill blue color in already numbered grid
                     pygame.draw.rect(self.pantalla, (self.celeste),(i * self.separacion+20, j * self.separacion+20, self.separacion+3, self.separacion+3))
-
-                    # Fill grid with default numbers specified
                     numeros = self.fuente_numeros.render(str(self.base[j][i]), 1,self.negro)
                     self.pantalla.blit(numeros, (i * self.separacion + 42, j * self.separacion + 37))
+        self.marco()
+
+    def valores_ingresados(self, valores):
+        val = self.fuente_numeros.render(str(valores), 1, (0, 0, 0))
+        self.pantalla.blit(val, (x * self.separacion + 15, y * self.separacion + 15))
 
 class JUEGO(GENERAR_SUDOKU_PYGAME):
-    def Juego_Sudoku(self):
-        seleccion1=0
-        avance=True
-        while avance:
-            self.pantalla.fill((self.blanco))
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    avance = False
+    def Eventos_Pygame(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.inicio = False
 
-                if event.type==pygame.MOUSEBUTTONDOWN:
-                    seleccion1=1
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                    self.seleccion1=1
                     pos=pygame.mouse.get_pos()
                     self.coordenadas(pos)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    if self.x<1:
+                        self.x=0
+                        self.seleccion1=1
+                    else:
+                        self.x-=1
+                        self.seleccion1=1
+                if event.key == pygame.K_RIGHT:
+                    if self.x>7:
+                        self.x=8
+                        self.seleccion1=1
+                    else:
+                        self.x+=1
+                        self.seleccion1=1
+                if event.key == pygame.K_UP:
+                    if self.y<1:
+                        self.y=0
+                        self.seleccion1=1
+                    else:
+                        self.y-=1
+                        self.seleccion1=1
+                if event.key == pygame.K_DOWN:
+                    if self.y>7:
+                        self.y=8
+                        self.seleccion1=1
+                    else:
+                        self.y+=1
+                        self.seleccion1=1
+                
+                #Ingreso de los números        
+                if event.key == pygame.K_1:
+                    self.valores = 1
+                if event.key == pygame.K_2:
+                    self.valores = 2
+                if event.key == pygame.K_3:
+                    self.valores = 3
+                if event.key == pygame.K_4:
+                    self.valores = 4
+                if event.key == pygame.K_5:
+                    self.valores = 5
+                if event.key == pygame.K_6:
+                    self.valores = 6
+                if event.key == pygame.K_7:
+                    self.valores = 7
+                if event.key == pygame.K_8:
+                    self.valores = 8
+                if event.key == pygame.K_9:
+                    self.valores = 9
+                if event.key == pygame.K_RETURN:
+                    self.solucion_sudoku()
+
+
+
+    def Juego_Sudoku(self):
+        self.variables_fijas()
+        self.fondo_pantalla()
+        while self.inicio:
+            self.pantalla.fill((self.blanco))
             
+            self.Eventos_Pygame()
+
+
             self.valores_en_pantalla()
-            self.marco()
-            if seleccion1 == 1:
+            if self.seleccion1 == 1:
                 self.casillas()
 
+            if self.valores != 0:		
+                self.valores_ingresados(self.valores)
+                self.base[int(self.y)][int(self.x)]= self.valores
+                self.valores=0
+                
+            
             # Update window
             pygame.display.flip()
 
 pruebas=JUEGO()
-pruebas.variables_fijas()
-pruebas.fondo_pantalla()
 pruebas.Juego_Sudoku()
+
+
+#Comentarios: 
+#Importante destacar que al momento de que el usuario ingrese los numeros estos se dirigen a la matriz base
+#Lo cual impide que si ingreso un dato erroneo, el programa lo pueda resolver. 
+
+#Posibles soluciones: 
+#Crear una base copia y que sea en esa lista en la que ingrese los valores, aunque también habría que editar 
+#la funcion valores en pantalla.
+
+#Ánimo CRACK que si se puedeeeeeeee. 
