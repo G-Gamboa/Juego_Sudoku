@@ -1,5 +1,7 @@
 import pygame
 import random
+import copy
+
 pygame.init()
 class DISEÑO():
     def __init__(self):
@@ -13,13 +15,16 @@ class DISEÑO():
         self.celeste=(92,222,220)
         self.tamaño_pantalla=(550,650)
         self.fuente_numeros=pygame.font.SysFont("Cooper",40)
-        self.fuente_textos=pygame.font.SysFont("Arial",60)
+        self.fuente_titulos=pygame.font.SysFont("Arial",40)
+        self.fuente_textos=pygame.font.SysFont("Arial",20)
         self.tamaño=9
         self.separacion=(self.tamaño_pantalla[0]-40)/9
         self.x=0
         self.y=0
         self.inicio=True
         self.seleccion1=0
+        self.seleccion2=0
+        self.instruccion=0
         self.valores=0
         self.espacios=self.tamaño_pantalla[0]/self.tamaño
         #CONTIENE NÚMEROS SOLAMENTE PARA PRUEBAS, AL TERMINAR EL PROGRAMA DEBE ESTABLECERSE VACÍA
@@ -33,6 +38,7 @@ class DISEÑO():
             [ 5 , 7 , 8 , 3 , 0 , 1 , 0 , 2 , 6 ], 
             [ 2 , 0 , 0 , 0 , 4 , 8 , 9 , 0 , 0 ], 
             [ 0 , 9 , 0 , 6 , 2 , 5 , 0 , 8 , 1 ]]
+        self.copia=copy.deepcopy(self.base)
 
     def coordenadas(self,pos):
         global x
@@ -172,18 +178,37 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
                 self.base [ fil ] [ col ] = 0
         return  False
     
-    def valores_en_pantalla(self):
+    def valores_en_pantalla(self,impresion):
+        #PENSAR SI HAY OTRA SOLUCIÓN PARA QUE AL MOMENTO DE 
+        #pygame.draw.rect(self.pantalla,self.blanco,(0,0,self.tamaño_pantalla[0],self.tamaño_pantalla[1]))
         for i in range (9):
             for j in range (9):
-                if self.base[j][i]!= 0:
+                if impresion[j][i]!= 0:
                     pygame.draw.rect(self.pantalla, (self.celeste),(i * self.separacion+20, j * self.separacion+20, self.separacion+3, self.separacion+3))
-                    numeros = self.fuente_numeros.render(str(self.base[j][i]), 1,self.negro)
+                    numeros = self.fuente_numeros.render(str(impresion[j][i]), 1,self.negro)
                     self.pantalla.blit(numeros, (i * self.separacion + 42, j * self.separacion + 37))
         self.marco()
 
     def valores_ingresados(self, valores):
         val = self.fuente_numeros.render(str(valores), 1, (0, 0, 0))
         self.pantalla.blit(val, (x * self.separacion + 15, y * self.separacion + 15))
+
+    def solucion_en_pantalla(self):
+        for i in range (9):
+            for j in range (9):
+                if self.copia[j][i]!= 0:
+                    pygame.draw.rect(self.pantalla, (self.celeste),(i * self.separacion+20, j * self.separacion+20, self.separacion+3, self.separacion+3))
+                    if self.copia[j][i]==self.base[j][i]:
+                        numeros = self.fuente_numeros.render(str(self.copia[j][i]), 1,self.negro)
+                    else:
+                        numeros = self.fuente_numeros.render(str(self.copia[j][i]), 1,self.rojo)
+                    self.pantalla.blit(numeros, (i * self.separacion + 42, j * self.separacion + 37))
+        self.marco()
+
+    def instrucciones_principal(self):
+        titulo=self.fuente_titulos.render("BIENVENIDO AL JUEGO SUDOKU",1,self.negro)
+        self.pantalla.blit(titulo,(20,10))
+        ins1=self.fuente_textos.render("PRESIONA ",1,self.rojo)
 
 class JUEGO(GENERAR_SUDOKU_PYGAME):
     def Eventos_Pygame(self):
@@ -245,7 +270,10 @@ class JUEGO(GENERAR_SUDOKU_PYGAME):
                 if event.key == pygame.K_9:
                     self.valores = 9
                 if event.key == pygame.K_RETURN:
-                    self.solucion_sudoku()
+                    self.seleccion2=1
+                    self.instruccion=2
+                if event.key == pygame.K_c:
+                    self.instruccion=1
 
 
 
@@ -257,18 +285,28 @@ class JUEGO(GENERAR_SUDOKU_PYGAME):
             
             self.Eventos_Pygame()
 
+            if self.instruccion==0:
+                self.instrucciones_principal()
 
-            self.valores_en_pantalla()
-            if self.seleccion1 == 1:
-                self.casillas()
+            if self.instruccion==1:
+                if self.valores != 0:		
+                    self.valores_ingresados(self.valores)
+                    self.copia[int(self.y)][int(self.x)]= self.valores
+                    self.valores=0
+                self.valores_en_pantalla(self.copia)
 
-            if self.valores != 0:		
-                self.valores_ingresados(self.valores)
-                self.base[int(self.y)][int(self.x)]= self.valores
-                self.valores=0
+                if self.seleccion1 == 1:
+                    self.casillas()
+
+            if self.instruccion==2:
+                if self.seleccion2==1:
+                    self.solucion_sudoku()
+                    self.valores_en_pantalla(self.base)
+                    self.solucion_en_pantalla()
+                else:
+                    self.valores_en_pantalla(self.copia)
                 
-            
-            # Update window
+            #Actualizar pantalla
             pygame.display.flip()
 
 pruebas=JUEGO()
@@ -276,11 +314,8 @@ pruebas.Juego_Sudoku()
 
 
 #Comentarios: 
-#Importante destacar que al momento de que el usuario ingrese los numeros estos se dirigen a la matriz base
-#Lo cual impide que si ingreso un dato erroneo, el programa lo pueda resolver. 
 
-#Posibles soluciones: 
-#Crear una base copia y que sea en esa lista en la que ingrese los valores, aunque también habría que editar 
-#la funcion valores en pantalla.
+#FALTA CREAR UN MENÚ INTERACTIVO QUE MENCIONE LAS INSTRUCCIONES, INVESTIGAR COMO HACER USO DE BOTONES Y 
+#NO DE LETRAS PARA NAVEGAR.
 
 #Ánimo CRACK que si se puedeeeeeeee. 
