@@ -11,7 +11,7 @@ class DISEÑO():
         self.blanco=(255,255,255)
         self.negro=(0,0,0)
         self.celeste=(92,222,220)
-        self.tamaño_pantalla=(550,600)
+        self.tamaño_pantalla=(550,650)
         self.fuente_numeros=pygame.font.SysFont("Cooper",40)
         self.fuentes_textos=pygame.font.SysFont("Arial",60)
         self.tamaño=9
@@ -44,10 +44,17 @@ class DISEÑO():
         
     def casillas(self):
         for i in range(2):
-            pygame.draw.line(self.pantalla, self.rojo, (self.x * self.espacios-3, (self.y + i)*self.espacios), (self.x * self.espacios + self.espacios + 3, (self.y + i)*self.espacios), 7)
-            pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* self.espacios, self.y * self.espacios ), ((self.x + i) * self.espacios, self.y * self.espacios + self.espacios), 7)
-
+            
+            limites=self.tamaño_pantalla[0]-40
+            separacion=(limites)/9
+        
+            pygame.draw.line(self.pantalla, self.rojo, (self.x * separacion+20-3, (self.y + i)*separacion+20), (self.x * separacion+20+ separacion + 3, (self.y + i)*separacion+20), 7)
+            pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* separacion+20, self.y * separacion+20), ((self.x + i) * separacion+20	, self.y * separacion+20 + separacion), 7)
     def marco(self):
+        grosor=8
+        limites=self.tamaño_pantalla[0]-40
+        separacion=(limites)/9
+
         for i in range(10):
             if i % 3 == 0 :
                 grosor = 8
@@ -55,8 +62,8 @@ class DISEÑO():
                 grosor = 2
 
             #FALTA HACER QUE EL CUADRO QUEDE EXACTO EN AMBOS BORDES
-            pygame.draw.line(self.pantalla, self.negro, (10, i * self.espacios), (self.tamaño_pantalla[0]-10, i * self.espacios), grosor)
-            pygame.draw.line(self.pantalla, self.negro, ((i * self.espacios)+5, 0), ((i * self.espacios)+5, self.tamaño_pantalla[0]), grosor)	
+            pygame.draw.line(self.pantalla, self.negro, (20, i * separacion+20), (limites+20, i * separacion+20), grosor)
+            pygame.draw.line(self.pantalla, self.negro, (i * separacion+20, 20), (i * separacion+20, limites+20), grosor)	
 
 
 class GENERAR_SUDOKU_PYGAME(DISEÑO):
