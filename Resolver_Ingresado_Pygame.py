@@ -1,4 +1,4 @@
-class RESOLVER_SUDOKU():
+class RESOLVER_SUDOKU_PYGAME():
     def __init__(self):
         pass
 
@@ -87,7 +87,7 @@ class RESOLVER_SUDOKU():
 
 #-----------------------------PARTE CENTRAL---------------------------
 
-solucion=RESOLVER_SUDOKU()
+solucion=RESOLVER_SUDOKU_PYGAME()
 solucion.crear()
 solucion.ingresar_sudoku()
 print("---------------------SOLUCIÓN---------------------------------")
