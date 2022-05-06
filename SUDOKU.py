@@ -27,10 +27,15 @@ class DISEÑO():
         #-----------------IMÁGENES
         self.fondo=pygame.image.load("fondo.png")
         self.icono=pygame.image.load("icono.png")
+        self.image_Marca=pygame.image.load("G.png")
         self.image_resolver=pygame.image.load("ResolverSudoku.png")
         self.image_jugar=pygame.image.load("JugarSudoku.png")
         self.image_menu=pygame.image.load("MenuSudoku.png")
         self.image_enter=pygame.image.load("EnterSudoku.png")
+        self.image_reset=pygame.image.load("ResetSudoku.png")
+        self.image_volver=pygame.image.load("VolverSudoku.png")
+        self.image_SI=pygame.image.load("SiSudoku.png")
+        self.image_NO=pygame.image.load("NoSudoku.png")
 
 
         #-----------------FUENTES
@@ -82,6 +87,16 @@ class DISEÑO():
                 pygame.draw.line(self.pantalla, self.rojo, (self.x * self.separacion+20-3, (self.y + i)*self.separacion+20), (self.x * self.separacion+20+ self.separacion + 3, (self.y + i)*self.separacion+20), 7)
                 pygame.draw.line(self.pantalla, self.rojo, ( (self.x + i)* self.separacion+20, self.y * self.separacion+20), ((self.x + i) * self.separacion+20	, self.y * self.separacion+20 + self.separacion), 7)
  
+    def instrucciones_marco(self):
+        if self.instruccion==2:
+            self.pantalla.blit(self.image_volver,(115,535))
+            self.pantalla.blit(self.image_SI,(100,590))
+            self.pantalla.blit(self.image_NO,(350,590))
+        else:
+            self.pantalla.blit(self.image_menu,(10,535))
+            self.pantalla.blit(self.image_enter,(230,535))
+            self.pantalla.blit(self.image_reset,(130,590))
+
     def marco(self):
         limites=self.tamaño_pantalla[0]-40
         for i in range(10):
@@ -92,8 +107,7 @@ class DISEÑO():
 
             pygame.draw.line(self.pantalla, self.negro, (20, i * self.separacion+20), (limites+20, i * self.separacion+20), grosor)
             pygame.draw.line(self.pantalla, self.negro, (i * self.separacion+20, 20), (i * self.separacion+20, limites+20), grosor)	
-        self.pantalla.blit(self.image_menu,(10,550))
-        self.pantalla.blit(self.image_enter,(230,550))
+        self.instrucciones_marco()
  
 
 class GENERAR_SUDOKU_PYGAME(DISEÑO):
@@ -105,7 +119,6 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
         for x in range(9):
             random_fila=random.randrange(9)
             random_columna=random.randrange(9)
-
             aleatorio=random.choice(numeros)
 
             if self.comprobacion(aleatorio,x,random_columna):
@@ -115,10 +128,8 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
             if self.comprobacion(aleatorio,random_fila,x):
                 if self.comprobacion(aleatorio,x,random_columna):
                     self.base[random_fila][x]=aleatorio
-
             numeros.remove(aleatorio)
-        self.copia=copy.deepcopy(self.base)
-        
+    
         numeros=[1,2,3,4,5,6,7,8,9]
         for x in range(9):
             random_fila=random.randrange(9)
@@ -135,6 +146,20 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
                     self.base[random_fila][x]=aleatorio
 
             numeros.remove(aleatorio)
+        self.solucion_sudoku()
+        #Sudoku aleatorio creado satisfactoriamente, solamente resta crear espacios en blanco
+        cero=0
+        while cero<60:
+            cero=0
+            for i in range (9):
+                for j in range (9):
+                    if self.base[j][i]== 0:
+                        cero+=1
+            random_fila=random.randrange(9)
+            random_columna=random.randrange(9)
+            self.base[random_fila][random_columna]=0
+
+        self.copia=copy.deepcopy(self.base)            
 
     def ingresar_sudoku(self):
         self.base=[]
@@ -162,7 +187,6 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
                     return  a 
         a  =  [ - 1 ,  - 1 ,  asignacion_numeros ] 
         return  a 
-
 
     def  comprobacion (self, n ,  f ,  c ): 
         #Comprueba la fila
@@ -236,20 +260,45 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
 
         self.pantalla.blit(self.image_resolver,(30,150))
         self.pantalla.blit(self.image_jugar,(30,250))
+        self.pantalla.blit(self.image_Marca,(20,370))
 
     def reinicio(self):
-        for i in range (9):
-            for j in range (9):
-                self.base[i][j]=0
-        self.copia
+        if self.instruccion==3 or self.instruccion==0:
+            for i in range (9):
+                for j in range (9):
+                    self.base[i][j]=0
+        elif self.instruccion==1:
+            for i in range (9):
+                for j in range (9):
+                    self.copia[i][j]=0
 
 
 class JUEGO(GENERAR_SUDOKU_PYGAME):
-    def Eventos_Pygame(self):
+
+    def Eventos_Pygame_Instrucciones(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.inicio = False
 
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                    self.seleccion1=1
+                    self.pos=pygame.mouse.get_pos()
+                    self.coordenadas(self.pos)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_j:
+                    self.datos_random()
+                    self.instruccion=1   
+                    self.modo=1
+                if event.key == pygame.K_r:
+                    self.instruccion=3   
+                    self.modo=2                                              
+
+    def Eventos_Pygame_Sudoku(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.inicio = False
+            
             if event.type==pygame.MOUSEBUTTONDOWN:
                     self.seleccion1=1
                     self.pos=pygame.mouse.get_pos()
@@ -306,56 +355,78 @@ class JUEGO(GENERAR_SUDOKU_PYGAME):
                     self.valores = 9
                 
                 if event.key == pygame.K_RETURN:
-                    self.seleccion2=1
                     self.instruccion=2
-                if event.key == pygame.K_j:
-                    self.datos_random()
-                    self.instruccion=1   
-                    self.modo=1
-                if event.key == pygame.K_r:
-                    self.instruccion=3   
-                    self.modo=2                                              
+                    self.seleccion2=1
+                
+                if event.key==pygame.K_BACKSPACE:
+                    self.base[int(self.y)][int(self.x)]= self.valores
+
                 if event.key == pygame.K_m:
                     self.instruccion=0
+                    self.modo=0
+                    self.reinicio()                    
+
+                if event.key == pygame.K_x:
                     self.reinicio()
 
+    def Eventos_Pygame_Final(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.inicio = False
+
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                    self.seleccion1=1
+                    self.pos=pygame.mouse.get_pos()
+                    self.coordenadas(self.pos)
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_s:
+                    self.seleccion2=0
+                    self.instruccion=0
+                    self.modo=0
+                    self.reinicio()  
+                        
+                if event.key == pygame.K_n:
+                    self.inicio=False
+    
     def Juego_Sudoku(self):
         self.variables_fijas()
         self.fondo_pantalla()
         while self.inicio:
             self.pantalla.blit(self.fondo,(0,0))
-            
-            self.Eventos_Pygame()
 
             if self.instruccion==0:
+                self.Eventos_Pygame_Instrucciones()                
                 self.instrucciones_principal()
 
+            if self.modo==1 or self.modo==2:
+                self.Eventos_Pygame_Sudoku()
+
             if self.instruccion==1:
-                if self.valores != 0:		
+                if self.valores !=0:		
                     self.valores_ingresados(self.valores)
                     self.copia[int(self.y)][int(self.x)]= self.valores
                     self.valores=0
+                self.valores_en_pantalla(self.base)
                 self.valores_en_pantalla(self.copia)
 
                 if self.seleccion1 == 1:
                     self.casillas()
 
             if self.instruccion==2:
-
                 if self.modo==2:
                     self.solucion_sudoku()
                     self.valores_en_pantalla(self.base)
                     self.solucion_en_pantalla(self.base)
 
 
-                if self.modo==1:
+                if self.modo==1:             
                     self.solucion_sudoku()
                     self.valores_en_pantalla(self.base)
                     self.solucion_en_pantalla(self.copia)
 
-
             if self.instruccion==3:
-                if self.valores != 0:		
+                if self.valores !=0:		
                     self.valores_ingresados(self.valores)
                     self.base[int(self.y)][int(self.x)]= self.valores
                     self.valores=0
@@ -365,17 +436,10 @@ class JUEGO(GENERAR_SUDOKU_PYGAME):
                     self.casillas()
 
 
+            if self.seleccion2==1:
+                self.Eventos_Pygame_Final()
             #Actualizar pantalla
             pygame.display.flip()
 
-pruebas=JUEGO()
-pruebas.Juego_Sudoku()
-
-
-#Comentarios: 
-
-#Añadir otra opción al inicio
-#Re-pensar la forma para que aparezcan más números en el sudoku aleatorio
-#Organizar los eventos de pygame para que no interfieran en otra pantalla o modo de juego
-
-#Ánimo CRACK que si se puedeeeeeeee. 
+SUDOKU_OFICIAL=JUEGO()
+SUDOKU_OFICIAL.Juego_Sudoku()
