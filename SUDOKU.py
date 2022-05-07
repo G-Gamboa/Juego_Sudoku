@@ -1,9 +1,10 @@
+#--------------------ARCHIVO PRINCIPAL PARA RESOLVER SUDOKU---------------------------
 import pygame
 import random
 import copy
 
-
 pygame.init()
+
 class DISEÑO():
     def __init__(self):
         pass
@@ -109,7 +110,6 @@ class DISEÑO():
             pygame.draw.line(self.pantalla, self.negro, (i * self.separacion+20, 20), (i * self.separacion+20, limites+20), grosor)	
         self.instrucciones_marco()
  
-
 class GENERAR_SUDOKU_PYGAME(DISEÑO):
     def __init__(self):
         pass
@@ -271,7 +271,6 @@ class GENERAR_SUDOKU_PYGAME(DISEÑO):
             for i in range (9):
                 for j in range (9):
                     self.copia[i][j]=0
-
 
 class JUEGO(GENERAR_SUDOKU_PYGAME):
 
